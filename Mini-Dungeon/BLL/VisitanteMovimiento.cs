@@ -8,6 +8,7 @@ namespace BLL
         private readonly Direccion _direccion;
         private bool _movimientoRealizado;
         public event Action NivelCompletado;
+        private Jugador _jugadorActual;
 
         public bool MovimientoRealizado => _movimientoRealizado;
 
@@ -24,6 +25,7 @@ namespace BLL
 
         public void VisitarJugador(Jugador jugador)
         {
+            _jugadorActual = jugador;
             var (nuevoX, nuevoY) = CalcularNuevaPosicion(jugador.PosX, jugador.PosY);
 
             // Validación de límites
@@ -58,37 +60,31 @@ namespace BLL
 
         public void VisitarCaja(Caja caja)
         {
-            // Calcular la posición detrás de la caja
+            // Posición detrás de la caja
             var (nuevoX, nuevoY) = CalcularNuevaPosicion(caja.PosX, caja.PosY);
 
-            // Chequear límites: la caja NO puede salir del tablero
+            // La caja no puede salir del tablero
             if (!EsPosicionValida(nuevoX, nuevoY))
                 return;
 
-            var elementoDetras = _tablero.ObtenerElementoEn(nuevoX, nuevoY);
+            var detras = _tablero.ObtenerElementoEn(nuevoX, nuevoY);
 
-            // Se puede empujar si la celda detrás está vacía
-            if (elementoDetras == null)
+            // Solo se empuja si la celda detrás está vacía
+            if (detras == null)
             {
-                // Guardar antigua posición de la caja (donde quedará el jugador)
-                int posJugadorX = caja.PosX;
-                int posJugadorY = caja.PosY;
+                // 1. Guardamos la posición actual de la caja
+                int posCajaX = caja.PosX;
+                int posCajaY = caja.PosY;
 
-                // Mover la caja
+                // 2. Movemos la caja hacia adelante
                 Mover(caja, nuevoX, nuevoY);
 
-                // Ahora mover el jugador a la antigua posición de la caja
-                var (jugadorX, jugadorY) = CalcularNuevaPosicion(posJugadorX, posJugadorY);
-                jugadorX = posJugadorX;
-                jugadorY = posJugadorY;
-
-                var jugador = _tablero.ObtenerElementoEn(jugadorX, jugadorY) as Jugador;
-
-                if (jugador != null)
-                    Mover(jugador, posJugadorX, posJugadorY);
+                // 3. Movemos al jugador a la posición previa de la caja
+                if (_jugadorActual != null)
+                    Mover(_jugadorActual, posCajaX, posCajaY);
             }
-
         }
+
         public void VisitarMeta(Meta meta)
         {
             // El jugador alcanzó la meta
