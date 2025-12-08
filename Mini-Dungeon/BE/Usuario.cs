@@ -1,0 +1,15 @@
+﻿namespace BE
+{
+    public class Usuario
+    {
+        public int Id { get; set; }
+        public string? Nombre { get; set; }
+        public string? PasswordHash { get; set; }
+
+        public Usuario(int usuarioId, string usuario)
+        {
+            Id = usuarioId;
+            Nombre = usuario;
+        }
+    }
+}
