@@ -9,10 +9,8 @@ namespace UI
     {
         private readonly ServicioPuntaje _servicioPuntaje;
         private readonly Usuario _usuarioActual;
-
         private PictureBox[,] _celdas;
         private const int TileSize = 50;
-
         private Tablero _tablero;
         private ServicioTablero _servicioMovimiento;
 
@@ -22,6 +20,9 @@ namespace UI
         private Image spriteRoca = Properties.Resources.spriteRoca;
         private Image spriteVacio = Properties.Resources.spriteVacio;
         private Image spriteMeta = Properties.Resources.spritePremio;
+
+        private int nivelActual = 1;
+        private int totalNiveles = 3;
 
         public Juego()
         {
@@ -36,14 +37,19 @@ namespace UI
 
         private async void OnNivelCompletado()
         {
-            MessageBox.Show("¡Felicitaciones! Completaste el nivel 🎉",
-                            "Nivel Completado",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-            await _servicioPuntaje.RegistrarVictoria(_usuarioActual.Id);
-            
+            MessageBox.Show("¡Nivel completado!");
+
+            nivelActual++;
+
+            if (nivelActual > totalNiveles)
+            {
+                MessageBox.Show("¡Ganaste todos los niveles!");
+                nivelActual = 1;
+            }
+
             InicializarJuego();
         }
+
 
         private async Task ObtenerPuntos()
         {
@@ -70,7 +76,9 @@ namespace UI
             _servicioMovimiento.NivelCompletado += OnNivelCompletado;
 
             CrearGrillaVisual();
-            CargarNivelDemo();
+
+            CargarNivelActual();
+
             RenderizarTablero();
 
             this.Focus();
@@ -121,13 +129,30 @@ namespace UI
         // ================================================================
         // =============   NIVEL DE DEMOSTRACIÓN    =======================
         // ================================================================
-
-        private void CargarNivelDemo()
+        private void CargarNivelActual()
         {
-            // LIMPIAR TABLERO
-            for (int x = 0; x < _tablero.Filas; x++)
-                for (int y = 0; y < _tablero.Columnas; y++)
-                    _tablero.ColocarElementoEn(x, y, null);
+            switch (nivelActual)
+            {
+                case 1:
+                    CargarNivel1();
+                    break;
+                case 2:
+                    CargarNivel2();
+                    break;
+                case 3:
+                    CargarNivel3();
+                    break;
+                default:
+                    MessageBox.Show("¡No hay más niveles!");
+                    nivelActual = 1;
+                    CargarNivel1();
+                    break;
+            }
+        }
+
+        private void CargarNivel1()
+        {
+            LimpiarTablero();
 
             // ======================================================
             // PAREDES EXTERNAS
@@ -189,6 +214,85 @@ namespace UI
             _tablero.ColocarElementoEn(6, 10, new Meta(6, 10));
         }
 
+        private void CargarNivel2()
+        {
+            LimpiarTablero();
+
+            // Paredes
+            for (int y = 0; y < 12; y++)
+            {
+                _tablero.ColocarElementoEn(0, y, new Roca(0, y));
+                _tablero.ColocarElementoEn(7, y, new Roca(7, y));
+            }
+            for (int x = 0; x < 8; x++)
+            {
+                _tablero.ColocarElementoEn(x, 0, new Roca(x, 0));
+                _tablero.ColocarElementoEn(x, 11, new Roca(x, 11));
+            }
+
+            _tablero.ColocarElementoEn(2, 4, new Roca(2, 4));
+            _tablero.ColocarElementoEn(2, 5, new Roca(2, 5));
+            _tablero.ColocarElementoEn(3, 5, new Roca(3, 5));
+            _tablero.ColocarElementoEn(4, 5, new Roca(4, 5));
+
+            // Cajas
+            _tablero.ColocarElementoEn(1, 5, new Caja(1, 5));
+            _tablero.ColocarElementoEn(3, 3, new Caja(3, 3));
+            _tablero.ColocarElementoEn(4, 3, new Caja(4, 3));
+            _tablero.ColocarElementoEn(5, 3, new Caja(5, 3));
+            _tablero.ColocarElementoEn(5, 2, new Caja(5, 2));
+            _tablero.ColocarElementoEn(5, 1, new Caja(5, 1));
+
+            // Jugador
+            _tablero.ColocarElementoEn(1, 2, new Jugador(1, 2));
+
+            // Meta
+            _tablero.ColocarElementoEn(6, 9, new Meta(6, 9));
+        }
+
+        private void CargarNivel3()
+        {
+            LimpiarTablero();
+
+            // Marco exterior
+            for (int y = 0; y < 12; y++)
+            {
+                _tablero.ColocarElementoEn(0, y, new Roca(0, y));
+                _tablero.ColocarElementoEn(7, y, new Roca(7, y));
+            }
+            for (int x = 0; x < 8; x++)
+            {
+                _tablero.ColocarElementoEn(x, 0, new Roca(x, 0));
+                _tablero.ColocarElementoEn(x, 11, new Roca(x, 11));
+            }
+
+            // Paredes internas tipo laberinto
+            _tablero.ColocarElementoEn(2, 3, new Roca(2, 3));
+            _tablero.ColocarElementoEn(3, 3, new Roca(3, 3));
+            _tablero.ColocarElementoEn(4, 3, new Roca(4, 3));
+
+            _tablero.ColocarElementoEn(2, 7, new Roca(2, 7));
+            _tablero.ColocarElementoEn(3, 7, new Roca(3, 7));
+            _tablero.ColocarElementoEn(4, 7, new Roca(4, 7));
+
+            // Cajas estratégicas
+            _tablero.ColocarElementoEn(3, 4, new Caja(3, 4));
+            _tablero.ColocarElementoEn(5, 6, new Caja(5, 6));
+            _tablero.ColocarElementoEn(3, 8, new Caja(3, 8));
+
+            // Jugador
+            _tablero.ColocarElementoEn(1, 1, new Jugador(1, 1));
+
+            // Meta
+            _tablero.ColocarElementoEn(6, 10, new Meta(6, 10));
+        }
+
+        private void LimpiarTablero()
+        {
+            for (int x = 0; x < _tablero.Filas; x++)
+                for (int y = 0; y < _tablero.Columnas; y++)
+                    _tablero.ColocarElementoEn(x, y, null);
+        }
 
         // ================================================================
         // ===============   RENDERIZAR TABLERO    ========================
