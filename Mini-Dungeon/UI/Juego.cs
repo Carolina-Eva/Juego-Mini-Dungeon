@@ -127,164 +127,21 @@ namespace UI
         }
 
         // ================================================================
-        // =============   NIVEL DE DEMOSTRACIÓN    =======================
+        // =============   CARGA DE NIVELES    =======================
         // ================================================================
+
         private void CargarNivelActual()
         {
-            switch (nivelActual)
+            string ruta = Path.Combine("Niveles", $"Nivel{nivelActual}.txt");
+
+            if (!File.Exists(ruta))
             {
-                case 1:
-                    CargarNivel1();
-                    break;
-                case 2:
-                    CargarNivel2();
-                    break;
-                case 3:
-                    CargarNivel3();
-                    break;
-                default:
-                    MessageBox.Show("¡No hay más niveles!");
-                    nivelActual = 1;
-                    CargarNivel1();
-                    break;
-            }
-        }
-
-        private void CargarNivel1()
-        {
-            LimpiarTablero();
-
-            // ======================================================
-            // PAREDES EXTERNAS
-            // ======================================================
-
-            for (int y = 0; y < 12; y++)
-            {
-                _tablero.ColocarElementoEn(0, y, new Roca(0, y));
-                _tablero.ColocarElementoEn(7, y, new Roca(7, y));
+                MessageBox.Show($"No existe el archivo {ruta}. Reiniciando a nivel 1.");
+                nivelActual = 1;
+                ruta = Path.Combine("Niveles", "Nivel1.txt");
             }
 
-            for (int x = 0; x < 8; x++)
-            {
-                _tablero.ColocarElementoEn(x, 0, new Roca(x, 0));
-                _tablero.ColocarElementoEn(x, 11, new Roca(x, 11));
-            }
-
-            // ======================================================
-            // LABERINTO INTERNO
-            // ======================================================
-
-            // Línea de paredes centro superior
-            for (int y = 3; y <= 7; y++)
-                _tablero.ColocarElementoEn(2, y, new Roca(2, y));
-
-            // Bloque central
-            _tablero.ColocarElementoEn(3, 3, new Roca(3, 3));
-            _tablero.ColocarElementoEn(3, 4, new Roca(3, 4));
-            _tablero.ColocarElementoEn(4, 4, new Roca(4, 4));
-
-            // Pared lateral derecha
-            _tablero.ColocarElementoEn(1, 8, new Roca(1, 8));
-            _tablero.ColocarElementoEn(2, 8, new Roca(2, 8));
-            _tablero.ColocarElementoEn(3, 8, new Roca(3, 8));
-
-            // ======================================================
-            // CAJAS (obstáculos reales)
-            // ======================================================
-
-            _tablero.ColocarElementoEn(4, 2, new Caja(4, 2));
-            _tablero.ColocarElementoEn(5, 5, new Caja(5, 5));
-            _tablero.ColocarElementoEn(3, 7, new Caja(3, 7));
-
-            // Una caja tapa parte del camino
-            _tablero.ColocarElementoEn(6, 8, new Caja(6, 6));
-            _tablero.ColocarElementoEn(5, 8, new Caja(5, 8));
-            _tablero.ColocarElementoEn(4, 8, new Caja(4, 8));
-
-            // ======================================================
-            // JUGADOR
-            // ======================================================
-
-            _tablero.ColocarElementoEn(1, 1, new Jugador(1, 1));
-
-            // ======================================================
-            // META (salida)
-            // ======================================================
-
-            _tablero.ColocarElementoEn(6, 10, new Meta(6, 10));
-        }
-
-        private void CargarNivel2()
-        {
-            LimpiarTablero();
-
-            // Paredes
-            for (int y = 0; y < 12; y++)
-            {
-                _tablero.ColocarElementoEn(0, y, new Roca(0, y));
-                _tablero.ColocarElementoEn(7, y, new Roca(7, y));
-            }
-            for (int x = 0; x < 8; x++)
-            {
-                _tablero.ColocarElementoEn(x, 0, new Roca(x, 0));
-                _tablero.ColocarElementoEn(x, 11, new Roca(x, 11));
-            }
-
-            _tablero.ColocarElementoEn(2, 4, new Roca(2, 4));
-            _tablero.ColocarElementoEn(2, 5, new Roca(2, 5));
-            _tablero.ColocarElementoEn(3, 5, new Roca(3, 5));
-            _tablero.ColocarElementoEn(4, 5, new Roca(4, 5));
-
-            // Cajas
-            _tablero.ColocarElementoEn(1, 5, new Caja(1, 5));
-            _tablero.ColocarElementoEn(3, 3, new Caja(3, 3));
-            _tablero.ColocarElementoEn(4, 3, new Caja(4, 3));
-            _tablero.ColocarElementoEn(5, 3, new Caja(5, 3));
-            _tablero.ColocarElementoEn(5, 2, new Caja(5, 2));
-            _tablero.ColocarElementoEn(5, 1, new Caja(5, 1));
-
-            // Jugador
-            _tablero.ColocarElementoEn(1, 2, new Jugador(1, 2));
-
-            // Meta
-            _tablero.ColocarElementoEn(6, 9, new Meta(6, 9));
-        }
-
-        private void CargarNivel3()
-        {
-            LimpiarTablero();
-
-            // Marco exterior
-            for (int y = 0; y < 12; y++)
-            {
-                _tablero.ColocarElementoEn(0, y, new Roca(0, y));
-                _tablero.ColocarElementoEn(7, y, new Roca(7, y));
-            }
-            for (int x = 0; x < 8; x++)
-            {
-                _tablero.ColocarElementoEn(x, 0, new Roca(x, 0));
-                _tablero.ColocarElementoEn(x, 11, new Roca(x, 11));
-            }
-
-            // Paredes internas tipo laberinto
-            _tablero.ColocarElementoEn(2, 3, new Roca(2, 3));
-            _tablero.ColocarElementoEn(3, 3, new Roca(3, 3));
-            _tablero.ColocarElementoEn(4, 3, new Roca(4, 3));
-
-            _tablero.ColocarElementoEn(2, 7, new Roca(2, 7));
-            _tablero.ColocarElementoEn(3, 7, new Roca(3, 7));
-            _tablero.ColocarElementoEn(4, 7, new Roca(4, 7));
-
-            // Cajas estratégicas
-            _tablero.ColocarElementoEn(3, 4, new Caja(3, 4));
-            _tablero.ColocarElementoEn(5, 6, new Caja(5, 6));
-            _tablero.ColocarElementoEn(3, 8, new Caja(3, 8));
-
-            // Jugador
-            _tablero.ColocarElementoEn(1, 1, new Jugador(1, 1));
-
-            // Meta
-            _tablero.ColocarElementoEn(6, 10, new Meta(6, 10));
+            CargarNivelDesdeArchivo(ruta);
         }
 
         private void LimpiarTablero()
@@ -293,6 +150,54 @@ namespace UI
                 for (int y = 0; y < _tablero.Columnas; y++)
                     _tablero.ColocarElementoEn(x, y, null);
         }
+
+        private void CargarNivelDesdeArchivo(string ruta)
+        {
+            LimpiarTablero();
+
+            var lineas = File.ReadAllLines(ruta);
+
+            for (int x = 0; x < lineas.Length; x++)
+            {
+                for (int y = 0; y < lineas[x].Length; y++)
+                {
+                    char c = lineas[x][y];
+
+                    switch (c)
+                    {
+                        case '#':
+                            _tablero.ColocarElementoEn(x, y, new Roca(x, y));
+                            break;
+
+                        case '@':
+                            _tablero.ColocarElementoEn(x, y, new Jugador(x, y));
+                            break;
+
+                        case '$':
+                            _tablero.ColocarElementoEn(x, y, new Caja(x, y));
+                            break;
+
+                        case '.':
+                            _tablero.ColocarElementoEn(x, y, new Meta(x, y));
+                            break;
+
+                        case '*': // TODO Caja sobre meta
+                            _tablero.ColocarElementoEn(x, y, new Caja(x, y));
+                            break;
+
+                        case '+': // TODO Jugador sobre meta
+                            _tablero.ColocarElementoEn(x, y, new Jugador(x, y));
+                            break;
+
+                        case ' ':
+                        default:
+                            // vacío
+                            break;
+                    }
+                }
+            }
+        }
+
 
         // ================================================================
         // ===============   RENDERIZAR TABLERO    ========================
