@@ -19,7 +19,7 @@ namespace BLL
             _movimientoRealizado = false;
         }
 
-        public void VisitarJugador(Jugador jugador)
+        public void Visitar(Jugador jugador)
         {
             _jugadorActual = jugador;
             var (nuevoX, nuevoY) = CalcularNuevaPosicion(jugador.PosX, jugador.PosY);
@@ -38,12 +38,12 @@ namespace BLL
             elementoDestino.Aceptar(this);
         }
 
-        public void VisitarRoca(Roca roca)
+        public void Visitar(Roca roca)
         {
             _movimientoRealizado = false;
         }
 
-        public void VisitarCaja(Caja caja)
+        public void Visitar(Caja caja)
         {
             var (nuevoX, nuevoY) = CalcularNuevaPosicion(caja.PosX, caja.PosY);
 
@@ -64,7 +64,7 @@ namespace BLL
             }
         }
 
-        public void VisitarMeta(Meta meta)
+        public void Visitar(Meta meta)
         {
             NivelCompletado?.Invoke();
         }

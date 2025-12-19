@@ -7,7 +7,7 @@
         }
         public override void Aceptar(IVisitanteMovimiento visitante)
         {
-            visitante.VisitarRoca(this);
+            visitante.Visitar(this);
         }
     }
 }

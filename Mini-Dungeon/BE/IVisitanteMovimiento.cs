@@ -2,9 +2,9 @@
 {
     public interface IVisitanteMovimiento
     {
-        void VisitarJugador(Jugador jugador);
-        void VisitarRoca(Roca roca);
-        void VisitarCaja(Caja caja);
-        void VisitarMeta(Meta meta);
+        void Visitar(Jugador jugador);
+        void Visitar(Roca roca);
+        void Visitar(Caja caja);
+        void Visitar(Meta meta);
     }
 }
