@@ -1,7 +1,5 @@
 ﻿using BE;
 using BLL;
-using DAL;
-using Microsoft.VisualBasic.Logging;
 
 namespace UI
 {
@@ -15,11 +13,15 @@ namespace UI
         private ServicioTablero _servicioMovimiento;
 
         // Sprites
-        private Image spriteJugador = Properties.Resources.spriteJugador;
-        private Image spriteCaja = Properties.Resources.spriteCaja;
-        private Image spriteRoca = Properties.Resources.spriteRoca;
+
         private Image spriteVacio = Properties.Resources.spriteVacio;
-        private Image spriteMeta = Properties.Resources.spritePremio;
+        private Dictionary<Type, Image> _sprites = new Dictionary<Type, Image>
+        {
+            { typeof(Jugador), Properties.Resources.spriteJugador },
+            { typeof(Caja), Properties.Resources.spriteCaja },
+            { typeof(Roca), Properties.Resources.spriteRoca },
+            { typeof(Meta), Properties.Resources.spritePremio }
+        };
 
         private int nivelActual = 1;
         private int totalNiveles = 3;
@@ -211,19 +213,14 @@ namespace UI
                 {
                     var elemento = _tablero.Grilla[x, y];
 
-                    if (elemento is Jugador)
-                        _celdas[x, y].Image = spriteJugador;
-                    else if (elemento is Caja)
-                        _celdas[x, y].Image = spriteCaja;
-                    else if (elemento is Roca)
-                        _celdas[x, y].Image = spriteRoca;
-                    else if (elemento is Meta)
-                        _celdas[x, y].Image = spriteMeta;
+                    if (elemento != null && _sprites.TryGetValue(elemento.GetType(), out var img))
+                        _celdas[x, y].Image = img;
                     else
                         _celdas[x, y].Image = spriteVacio;
                 }
             }
         }
+
 
         // ================================================================
         // ===============   CAPTURA DE TECLADO    ========================
