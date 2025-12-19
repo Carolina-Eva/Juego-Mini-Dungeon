@@ -19,18 +19,13 @@ namespace BLL
             _movimientoRealizado = false;
         }
 
-        // ============================================
-        // VISITAR JUGADOR
-        // ============================================
-
         public void VisitarJugador(Jugador jugador)
         {
             _jugadorActual = jugador;
             var (nuevoX, nuevoY) = CalcularNuevaPosicion(jugador.PosX, jugador.PosY);
 
-            // Validación de límites
             if (!EsPosicionValida(nuevoX, nuevoY))
-                return; // Movimiento inválido
+                return;
 
             var elementoDestino = _tablero.ObtenerElementoEn(nuevoX, nuevoY);
 
@@ -40,46 +35,30 @@ namespace BLL
                 return;
             }
 
-            // Se aplica doble despacho
             elementoDestino.Aceptar(this);
         }
 
-        // ============================================
-        // VISITAR ROCA
-        // ============================================
-
         public void VisitarRoca(Roca roca)
         {
-            // La roca impide el movimiento
             _movimientoRealizado = false;
         }
 
-        // ============================================
-        // VISITAR CAJA
-        // ============================================
-
         public void VisitarCaja(Caja caja)
         {
-            // Posición detrás de la caja
             var (nuevoX, nuevoY) = CalcularNuevaPosicion(caja.PosX, caja.PosY);
 
-            // La caja no puede salir del tablero
             if (!EsPosicionValida(nuevoX, nuevoY))
                 return;
 
             var detras = _tablero.ObtenerElementoEn(nuevoX, nuevoY);
 
-            // Solo se empuja si la celda detrás está vacía
             if (detras == null)
             {
-                // 1. Guardamos la posición actual de la caja
                 int posCajaX = caja.PosX;
                 int posCajaY = caja.PosY;
 
-                // 2. Movemos la caja hacia adelante
                 Mover(caja, nuevoX, nuevoY);
 
-                // 3. Movemos al jugador a la posición previa de la caja
                 if (_jugadorActual != null)
                     Mover(_jugadorActual, posCajaX, posCajaY);
             }
@@ -87,14 +66,8 @@ namespace BLL
 
         public void VisitarMeta(Meta meta)
         {
-            // El jugador alcanzó la meta
             NivelCompletado?.Invoke();
         }
-
-
-        // ============================================
-        // FUNCIONES AUXILIARES
-        // ============================================
 
         private (int x, int y) CalcularNuevaPosicion(int x, int y)
         {

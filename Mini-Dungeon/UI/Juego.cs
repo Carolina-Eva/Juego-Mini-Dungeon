@@ -62,16 +62,14 @@ namespace UI
         private async Task InicializarJuego()
         {
             await ObtenerPuntos();
-            // 1. Desuscribirse del servicio antiguo si existe
+
             if (_servicioMovimiento != null)
                 _servicioMovimiento.NivelCompletado -= OnNivelCompletado;
 
-            // 2. Limpiar grilla visual
             tableLayoutPanel1.Controls.Clear();
             tableLayoutPanel1.RowStyles.Clear();
             tableLayoutPanel1.ColumnStyles.Clear();
 
-            // Crear tablero 8x12
             _tablero = new Tablero(8, 12);
             _servicioMovimiento = new ServicioTablero(_tablero);
 
@@ -85,10 +83,6 @@ namespace UI
 
             this.Focus();
         }
-
-        // ================================================================
-        // ===============   CREACIÓN DE GRILLA VISUAL    =================
-        // ================================================================
 
         private void CrearGrillaVisual()
         {
@@ -127,10 +121,6 @@ namespace UI
                 }
             }
         }
-
-        // ================================================================
-        // =============   CARGA DE NIVELES    =======================
-        // ================================================================
 
         private void CargarNivelActual()
         {
@@ -200,11 +190,6 @@ namespace UI
             }
         }
 
-
-        // ================================================================
-        // ===============   RENDERIZAR TABLERO    ========================
-        // ================================================================
-
         private void RenderizarTablero()
         {
             for (int x = 0; x < _tablero.Filas; x++)
@@ -220,11 +205,6 @@ namespace UI
                 }
             }
         }
-
-
-        // ================================================================
-        // ===============   CAPTURA DE TECLADO    ========================
-        // ================================================================
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
