@@ -41,6 +41,9 @@ namespace UI
         {
             MessageBox.Show("¡Nivel completado!");
 
+            await _servicioPuntaje.RegistrarVictoria(_usuarioActual.Id);
+            await ObtenerPuntos();
+
             nivelActual++;
 
             if (nivelActual > totalNiveles)
