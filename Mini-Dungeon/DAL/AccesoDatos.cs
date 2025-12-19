@@ -9,7 +9,7 @@ namespace DAL
 
         internal AccesoDatos()
         {
-            _connectionString = @"Data Source=DESKTOP-CLR13LB\SQLEXPRESS; Initial Catalog=Sokoban; Integrated Security=SSPI; TrustServerCertificate=True;";
+            _connectionString = @"Data Source=.; Initial Catalog=Sokoban; Integrated Security=SSPI; TrustServerCertificate=True;";
         }
 
         private async Task<SqlConnection> CrearConexion()
